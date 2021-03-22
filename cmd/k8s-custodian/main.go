@@ -9,6 +9,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "custodian"
+	app.Usage = "cli to manage various repetitive tasks in a kubernetes cluster"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "log-format",
