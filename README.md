@@ -1,6 +1,6 @@
 # k8s-custodian
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](LICENSE)   
 ![Last commit](https://badgen.net/github/last-commit/dictyBase-docker/k8s-custodian/develop)   
@@ -19,6 +19,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://cybersiddhu.github.com/"><img src="https://avatars.githubusercontent.com/u/48740?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Siddhartha Basu</b></sub></a><br /><a href="https://github.com/dictybase-docker/k8s-custodian/commits?author=cybersiddhu" title="Code">💻</a> <a href="https://github.com/dictybase-docker/k8s-custodian/commits?author=cybersiddhu" title="Documentation">📖</a> <a href="#data-cybersiddhu" title="Data">🔣</a> <a href="https://github.com/dictybase-docker/k8s-custodian/commits?author=cybersiddhu" title="Tests">⚠️</a> <a href="#maintenance-cybersiddhu" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://www.erichartline.net/"><img src="https://avatars.githubusercontent.com/u/13489381?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eric Hartline</b></sub></a><br /><a href="https://github.com/dictybase-docker/k8s-custodian/commits?author=wildlifehexagon" title="Code">💻</a> <a href="https://github.com/dictybase-docker/k8s-custodian/commits?author=wildlifehexagon" title="Documentation">📖</a> <a href="#maintenance-wildlifehexagon" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
