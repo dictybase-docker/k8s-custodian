@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/dictybase-docker/k8s-custodian/internal/logger"
+	"github.com/dictybase-docker/k8s-custodian/internal/storage"
 	"github.com/mholt/archiver/v3"
 	"github.com/urfave/cli"
 )
@@ -49,6 +51,10 @@ func RunArangoBackup(c *cli.Context) error {
 		)
 	}
 	aFile, err := archiveDir(dumpDir)
+	if err != nil {
+		return cli.NewExitError(err.Error(), 2)
+	}
+	err = storage.SaveInS3(c, aFile, logger.GetLogger(c))
 	if err != nil {
 		return cli.NewExitError(err.Error(), 2)
 	}
