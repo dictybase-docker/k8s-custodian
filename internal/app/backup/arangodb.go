@@ -24,7 +24,7 @@ func RunArangoBackup(c *cli.Context) error {
 	}
 	defer os.RemoveAll(dumpDir)
 	// create tar archive
-	aDir, aFile, err := archiveDir(dumpDir)
+	aDir, aFile, err := archiveDir(dumpDir, logger)
 	if err != nil {
 		return cli.NewExitError(err.Error(), 2)
 	}
@@ -72,16 +72,18 @@ func arangoDump(c *cli.Context, logger *logrus.Entry) (string, error) {
 	return dumpDir, nil
 }
 
-func archiveDir(dir string) (string, string, error) {
+func archiveDir(dir string, logger *logrus.Entry) (string, string, error) {
 	aDir, err := ioutil.TempDir(os.TempDir(), "archive-*")
 	if err != nil {
 		return aDir, "",
 			fmt.Errorf("error in creating a temp dir for archive %s", err)
 	}
+	logger.Debugf("going to create archive in %s folder", aDir)
 	aFile := filepath.Join(
 		aDir,
 		fmt.Sprintf("arangobackup-%s.tar", time.Now().Format("01-02-2006")),
 	)
+	logger.Infof("created archive %s", aFile)
 	return aDir, aFile, archiver.Archive([]string{dir}, aFile)
 }
 
