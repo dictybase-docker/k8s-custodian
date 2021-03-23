@@ -33,10 +33,6 @@ func MinioS3StorageCmd() []cli.Flag {
 			Required: true,
 		},
 		cli.StringFlag{
-			Name:  "input",
-			Usage: "input file that will be uploaded",
-		},
-		cli.StringFlag{
 			Name:     "upload-path,p",
 			Usage:    "full upload path inside the bucket",
 			Required: true,
