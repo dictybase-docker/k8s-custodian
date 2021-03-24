@@ -26,6 +26,9 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 			2,
 		)
 	}
+	if err := bucketConfiguration(c, s3Client); err != nil {
+		return cli.NewExitError(err.Error(), 2)
+	}
 	info, err := s3Client.FPutObject(
 		context.Background(),
 		c.String("s3-bucket"),
@@ -43,7 +46,28 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 	return nil
 }
 
-func bucketExpiration(client *minio.Client, bucket string, expiration int) error {
+func bucketConfiguration(c *cli.Context, client *minio.Client) error {
+	bucket := c.String("s3-bucket")
+	if err := findOrCreateBucket(client, bucket); err != nil {
+		return err
+	}
+	return manageBucketLifecycle(client, bucket, c.Int("expiration"))
+}
+
+func manageBucketLifecycle(client *minio.Client, bucket string, expiration int) error {
+	exConfig, err := client.GetBucketLifecycle(context.Background(), bucket)
+	if err != nil {
+		return err
+	}
+	if exConfig != nil {
+		if int(exConfig.Rules[0].Expiration.Days) == expiration {
+			return nil
+		}
+	}
+	return configureBucketLifecycle(client, bucket, expiration)
+}
+
+func configureBucketLifecycle(client *minio.Client, bucket string, expiration int) error {
 	config := lifecycle.NewConfiguration()
 	config.Rules = []lifecycle.Rule{
 		{
