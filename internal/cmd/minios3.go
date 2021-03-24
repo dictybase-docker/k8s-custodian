@@ -37,5 +37,10 @@ func MinioS3StorageCmd() []cli.Flag {
 			Usage:    "full upload path inside the bucket",
 			Required: true,
 		},
+		cli.IntFlag{
+			Name:  "expiration,exp",
+			Usage: "no of days after which objects in the bucket will be removed",
+			Value: 60,
+		},
 	}
 }
