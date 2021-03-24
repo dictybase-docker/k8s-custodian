@@ -6,6 +6,7 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/minio/minio-go/v7/pkg/lifecycle"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -39,6 +40,24 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 		"save file %s to s3 storage with etag %s and version %s",
 		input, info.ETag, info.VersionID,
 	)
+	return nil
+}
+
+func bucketExpiration(client *minio.Client, bucket string, expiration int) error {
+	config := lifecycle.NewConfiguration()
+	config.Rules = []lifecycle.Rule{
+		{
+			ID:     "expire-backup-bucket",
+			Status: "Enabled",
+			Expiration: lifecycle.Expiration{
+				Days: lifecycle.ExpirationDays(expiration),
+			},
+		},
+	}
+	err := client.SetBucketLifecycle(context.Background(), bucket, config)
+	if err != nil {
+		return fmt.Errorf("error in setting bucket lifecycle %s", err)
+	}
 	return nil
 }
 
