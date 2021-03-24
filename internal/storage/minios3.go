@@ -41,3 +41,18 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 	)
 	return nil
 }
+
+func findOrCreateBucket(client *minio.Client, bucket string) error {
+	ok, err := client.BucketExists(context.Background(), bucket)
+	if err != nil {
+		return fmt.Errorf("error in finding bucket %s", err)
+	}
+	if ok {
+		return nil
+	}
+	err = client.MakeBucket(context.Background(), bucket, minio.MakeBucketOptions{})
+	if err != nil {
+		return fmt.Errorf("error in creating bucket %s", err)
+	}
+	return client.EnableVersioning(context.Background(), bucket)
+}
