@@ -15,7 +15,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func RunArangoBackup(c *cli.Context) error {
+func ArangoBackupToMinioS3(c *cli.Context) error {
 	logger := log.GetLogger(c)
 	// dump the database
 	dumpDir, err := arangoDump(c, logger)

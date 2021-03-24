@@ -27,7 +27,7 @@ func main() {
 			Name:   "arangoback-to-minioS3",
 			Usage:  "backup arangodb database to minio s3 storage",
 			Flags:  getArangoBackupFlags(),
-			Action: backup.RunArangoBackup,
+			Action: backup.ArangoBackupToMinioS3,
 		},
 	}
 }
