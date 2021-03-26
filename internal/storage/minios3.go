@@ -37,7 +37,7 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 		minio.PutObjectOptions{ContentType: "application/text"},
 	)
 	if err != nil {
-		fmt.Errorf("unable to upload file %s", err)
+		return fmt.Errorf("unable to upload file %s", err)
 	}
 	logger.Infof(
 		"save file %s to s3 storage with etag %s and version %s",
