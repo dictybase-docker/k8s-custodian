@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/dictybase-docker/k8s-custodian/internal/app/backup"
 	"github.com/dictybase-docker/k8s-custodian/internal/cmd"
 	"github.com/urfave/cli"
@@ -29,6 +31,9 @@ func main() {
 			Flags:  getArangoBackupFlags(),
 			Action: backup.ArangoBackupToMinioS3,
 		},
+	}
+	if err := app.Run(os.Args); err != nil {
+		os.Exit(1)
 	}
 }
 
