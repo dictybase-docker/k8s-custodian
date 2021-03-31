@@ -54,7 +54,7 @@ func arangoDump(c *cli.Context, logger *logrus.Entry) (string, error) {
 		"--server.password", c.String("arangodb-pass"),
 		"--server.database", c.String("arangodb-database"),
 		"--compress-output", "--dump-dependencies",
-		"--include-system-collection",
+		"--include-system-collections",
 		"--threads", "4",
 		"--output-directory", dumpDir,
 	}
