@@ -1,12 +1,12 @@
-FROM golang:1.16.2-buster AS builder
+FROM golang:1.16.2-alpine3.13 AS builder
 ENV GOPROXY https://proxy.golang.org
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
     GOARCH=amd64
-RUN apt-get -qq update \
-    && apt-get -yqq install upx
-RUN mkdir -p /k8s-custodian
+RUN apk add --no-cache git build-base \
+    binutils upx \
+    && mkdir -p /k8s-custodian
 WORKDIR /k8s-custodian
 COPY go.mod ./
 COPY go.sum ./
@@ -23,7 +23,7 @@ RUN go build \
 RUN strip /bin/app \
     && upx -q -9 /bin/app
 
-FROM gcr.io/distroless/static
+FROM arangodb:3.6.12
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
