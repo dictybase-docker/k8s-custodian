@@ -2,7 +2,6 @@ package backup
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -73,7 +72,7 @@ func arangoDump(c *cli.Context, logger *logrus.Entry) (string, error) {
 }
 
 func archiveDir(dir string, logger *logrus.Entry) (string, string, error) {
-	aDir, err := ioutil.TempDir(os.TempDir(), "archive-*")
+	aDir, err := os.MkdirTemp(os.TempDir(), "*-archive")
 	if err != nil {
 		return aDir, "",
 			fmt.Errorf("error in creating a temp dir for archive %s", err)
@@ -83,17 +82,16 @@ func archiveDir(dir string, logger *logrus.Entry) (string, string, error) {
 		aDir,
 		fmt.Sprintf("arangobackup-%s.tar", time.Now().Format("01-02-2006")),
 	)
-	logger.Infof("created archive %s", aFile)
+	logger.Infof("created archive %s for dir %s", aFile, dir)
 	return aDir, aFile, archiver.Archive([]string{dir}, aFile)
 }
 
 func outDir(c *cli.Context) (string, error) {
-	dirPrefix := fmt.Sprintf("%s-%s", c.String("arangodb-database"), time.Now().Format("01-02-2006"))
-	parentDir := os.TempDir()
-	dumpDir, err := ioutil.TempDir(parentDir, fmt.Sprintf("%s-*", dirPrefix))
+	dirSuffix := fmt.Sprintf("%s-%s", c.String("arangodb-database"), time.Now().Format("01-02-2006"))
+	dumpDir, err := os.MkdirTemp(os.TempDir(), fmt.Sprintf("*-%s", dirSuffix))
 	if err != nil {
 		return dumpDir,
-			fmt.Errorf("error in creating a temp dir with prefix %s %s", dirPrefix, err)
+			fmt.Errorf("error in creating a temp dir with prefix %s %s", dirSuffix, err)
 	}
 	return dumpDir, nil
 }
