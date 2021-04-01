@@ -57,7 +57,7 @@ func bucketConfiguration(c *cli.Context, client *minio.Client) error {
 func manageBucketLifecycle(client *minio.Client, bucket string, expiration int) error {
 	exConfig, err := client.GetBucketLifecycle(context.Background(), bucket)
 	if err != nil {
-		return err
+		return fmt.Errorf("error in getting lifecycle for bucket %s %s", bucket, err)
 	}
 	if exConfig != nil {
 		if int(exConfig.Rules[0].Expiration.Days) == expiration {
@@ -97,5 +97,9 @@ func findOrCreateBucket(client *minio.Client, bucket string) error {
 	if err != nil {
 		return fmt.Errorf("error in creating bucket %s", err)
 	}
-	return client.EnableVersioning(context.Background(), bucket)
+	err = client.EnableVersioning(context.Background(), bucket)
+	if err != nil {
+		return fmt.Errorf("error in creating bucker versioning %s", err)
+	}
+	return nil
 }
