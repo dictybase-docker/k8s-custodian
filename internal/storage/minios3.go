@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -30,8 +31,8 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 	}
 	info, err := s3Client.FPutObject(
 		context.Background(),
-		c.String("s3-bucket"),
-		c.String("upload-path"),
+		fmt.Sprintf("%s/%s", c.String("s3-bucket"), c.String("upload-path")),
+		filepath.Base(input),
 		input,
 		minio.PutObjectOptions{ContentType: "application/xtar"},
 	)
