@@ -31,8 +31,8 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 	}
 	info, err := s3Client.FPutObject(
 		context.Background(),
-		fmt.Sprintf("%s/%s", c.String("s3-bucket"), c.String("upload-path")),
-		filepath.Base(input),
+		c.String("s3-bucket"),
+		fmt.Sprintf("%s/%s", c.String("upload-path"), filepath.Base(input)),
 		input,
 		minio.PutObjectOptions{ContentType: "application/xtar"},
 	)
