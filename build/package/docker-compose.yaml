@@ -1,12 +1,12 @@
 # a docker compose file to start and arangodb instance for testing purpose
 version: "3.9"
-volumes:
-    data:
-        name: arangodata
 services:
     arangodb:
         image: arangodb:3.6.12
         environment: 
-            ARANGO_NO_AUTH=1
+            ARANGO_NO_AUTH: 1
         volumes:
             - arangodata:/var/lib/arangodb3
+
+volumes:
+    arangodata:
