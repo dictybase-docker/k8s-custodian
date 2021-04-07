@@ -3,10 +3,10 @@ package storage
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -32,9 +32,9 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 	info, err := s3Client.FPutObject(
 		context.Background(),
 		c.String("s3-bucket"),
-		c.String("upload-path"),
+		fmt.Sprintf("%s/%s", c.String("upload-path"), filepath.Base(input)),
 		input,
-		minio.PutObjectOptions{ContentType: "application/text"},
+		minio.PutObjectOptions{ContentType: "application/xtar"},
 	)
 	if err != nil {
 		return fmt.Errorf("unable to upload file %s", err)
@@ -47,42 +47,7 @@ func SaveInS3(c *cli.Context, input string, logger *logrus.Entry) error {
 }
 
 func bucketConfiguration(c *cli.Context, client *minio.Client) error {
-	bucket := c.String("s3-bucket")
-	if err := findOrCreateBucket(client, bucket); err != nil {
-		return err
-	}
-	return manageBucketLifecycle(client, bucket, c.Int("expiration"))
-}
-
-func manageBucketLifecycle(client *minio.Client, bucket string, expiration int) error {
-	exConfig, err := client.GetBucketLifecycle(context.Background(), bucket)
-	if err != nil {
-		return err
-	}
-	if exConfig != nil {
-		if int(exConfig.Rules[0].Expiration.Days) == expiration {
-			return nil
-		}
-	}
-	return configureBucketLifecycle(client, bucket, expiration)
-}
-
-func configureBucketLifecycle(client *minio.Client, bucket string, expiration int) error {
-	config := lifecycle.NewConfiguration()
-	config.Rules = []lifecycle.Rule{
-		{
-			ID:     "expire-backup-bucket",
-			Status: "Enabled",
-			Expiration: lifecycle.Expiration{
-				Days: lifecycle.ExpirationDays(expiration),
-			},
-		},
-	}
-	err := client.SetBucketLifecycle(context.Background(), bucket, config)
-	if err != nil {
-		return fmt.Errorf("error in setting bucket lifecycle %s", err)
-	}
-	return nil
+	return findOrCreateBucket(client, c.String("s3-bucket"))
 }
 
 func findOrCreateBucket(client *minio.Client, bucket string) error {
@@ -97,5 +62,5 @@ func findOrCreateBucket(client *minio.Client, bucket string) error {
 	if err != nil {
 		return fmt.Errorf("error in creating bucket %s", err)
 	}
-	return client.EnableVersioning(context.Background(), bucket)
+	return nil
 }
