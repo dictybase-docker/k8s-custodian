@@ -4,7 +4,6 @@ on:
     branches:
       - develop
       - master
-      - "feat/**"
 jobs:
   buildrpg:
     runs-on: ubuntu-latest
@@ -38,6 +37,6 @@ jobs:
         with:
           push: true
           file: build/package/Dockerfile.resticpg
-          tags: dictybase/resticpg:${{ steps.branch.outputs.id }}-${{ steps.sha.outputs.id }}
+          tags: dictybase/resticpg:${{ steps.branch.outputs.id }}-${{ steps.sha.outputs.id }},dictybase/resticpg:${{ steps.branch.outputs.id }}-latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
