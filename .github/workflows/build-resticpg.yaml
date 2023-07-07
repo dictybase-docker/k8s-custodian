@@ -29,11 +29,15 @@ jobs:
         id: sha
         run: |
           echo "id=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
+      - name: get current branch name
+        id: branch
+        run: |
+          echo "id=$(echo $GITHUB_REF_NAME | sed -e 's/\//-/')" >> $GITHUB_OUTPUT
       - name: docker build and push
         uses: docker/build-push-action@v4
         with:
           push: true
           file: build/package/Dockerfile.resticpg
-          tags: dictybase/resticpg:${{ github.ref_name }}-${{ steps.sha.outputs.id }}
+          tags: dictybase/resticpg:${{ steps.branch.outputs.id }}-${{ steps.sha.outputs.id }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
