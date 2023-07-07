@@ -5,7 +5,6 @@ on:
       - develop
 jobs:
   build:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: check out code
