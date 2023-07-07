@@ -3,8 +3,9 @@ on: create
 jobs:
   create-pr:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: get branch name
         id: vars
         run: |
@@ -13,6 +14,6 @@ jobs:
       - name: pull-request
         uses: repo-sync/pull-request@v2
         with:
-          github_token: ${{ secrets.WORKFLOW_RUN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_branch: "develop"
           pr_title: "Pulling ${{ steps.vars.outputs.branch }} into develop"
