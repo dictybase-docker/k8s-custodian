@@ -8,5 +8,5 @@ require (
 	github.com/mholt/archiver/v3 v3.5.1
 	github.com/minio/minio-go/v7 v7.0.77
 	github.com/sirupsen/logrus v1.9.3
-	github.com/urfave/cli v1.22.15
+	github.com/urfave/cli v1.22.16
 )
